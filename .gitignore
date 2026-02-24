@@ -33,3 +33,10 @@ test_libxls
 test2_libxls
 test_cpp
 test.htm
+
+# Swift Package Manager
+.build/
+.swiftpm/
+
+# Claude Code
+.claude/

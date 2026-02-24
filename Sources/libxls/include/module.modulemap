@@ -1,0 +1,6 @@
+module libxls {
+    umbrella header "xls.h"
+    exclude header "libxls/brdb.h"
+    exclude header "libxls/brdb.c.h"
+    export *
+}

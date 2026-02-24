@@ -1,0 +1,86 @@
+---
+Name: libxls
+
+Tags:
+- Name: xls_error_t
+  EnumExtensibility: closed
+
+Functions:
+# --- Version & error info ---
+- Name: xls_getVersion
+  ResultType: "const char * _Nonnull"
+- Name: xls_getError
+  ResultType: "const char * _Nonnull"
+  Parameters:
+  - Position: 0
+    Nullability: N
+
+# --- Open / close workbook ---
+- Name: xls_open_file
+  ResultType: "xlsWorkBook * _Nullable"
+  Parameters:
+  - Position: 0
+    Nullability: N
+  - Position: 1
+    Nullability: N
+  - Position: 2
+    Nullability: N
+- Name: xls_open_buffer
+  ResultType: "xlsWorkBook * _Nullable"
+  Parameters:
+  - Position: 0
+    Nullability: N
+  - Position: 2
+    Nullability: N
+  - Position: 3
+    Nullability: N
+- Name: xls_close_WB
+  Parameters:
+  - Position: 0
+    Nullability: O
+- Name: xls_open
+  ResultType: "xlsWorkBook * _Nullable"
+
+# --- Parse ---
+- Name: xls_parseWorkBook
+  Parameters:
+  - Position: 0
+    Nullability: N
+- Name: xls_parseWorkSheet
+  Parameters:
+  - Position: 0
+    Nullability: N
+
+# --- Worksheet access ---
+- Name: xls_getWorkSheet
+  ResultType: "xlsWorkSheet * _Nullable"
+  Parameters:
+  - Position: 0
+    Nullability: N
+- Name: xls_close_WS
+  Parameters:
+  - Position: 0
+    Nullability: O
+
+# --- Summary info ---
+- Name: xls_summaryInfo
+  ResultType: "xlsSummaryInfo * _Nullable"
+  Parameters:
+  - Position: 0
+    Nullability: N
+- Name: xls_close_summaryInfo
+  Parameters:
+  - Position: 0
+    Nullability: O
+
+# --- Row/cell access ---
+- Name: xls_row
+  ResultType: "xlsRow * _Nullable"
+  Parameters:
+  - Position: 0
+    Nullability: N
+- Name: xls_cell
+  ResultType: "xlsCell * _Nullable"
+  Parameters:
+  - Position: 0
+    Nullability: N
