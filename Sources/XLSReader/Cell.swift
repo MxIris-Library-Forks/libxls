@@ -1,5 +1,20 @@
 import libxls
 
+/// BIFF record type identifiers for cell records.
+private enum RecordID: UInt16 {
+    case blank      = 0x0201
+    case mulblank   = 0x00BE
+    case number     = 0x0203
+    case label      = 0x0204
+    case boolerr    = 0x0205
+    case rk         = 0x027E
+    case mulrk      = 0x00BD
+    case formula    = 0x0006
+    case formulaAlt = 0x0406
+    case labelSST   = 0x00FD
+    case rstring    = 0x00D6
+}
+
 /// The semantic value of a cell, derived from its BIFF record type and content.
 public enum CellValue: Sendable, CustomStringConvertible {
     case blank
@@ -44,10 +59,10 @@ public struct Cell: Sendable {
 
     /// The semantic value of this cell.
     public var value: CellValue {
-        switch Int32(id) {
-        case XLS_RECORD_BLANK, XLS_RECORD_MULBLANK:
+        switch RecordID(rawValue: id) {
+        case .blank, .mulblank:
             return .blank
-        case XLS_RECORD_FORMULA, XLS_RECORD_FORMULA_ALT:
+        case .formula, .formulaAlt:
             if intValue == 0 {
                 return .number(doubleValue)
             } else if string == "bool" {
@@ -57,11 +72,11 @@ public struct Cell: Sendable {
             } else {
                 return .string(string ?? "")
             }
-        case XLS_RECORD_LABELSST, XLS_RECORD_LABEL, XLS_RECORD_RSTRING:
+        case .labelSST, .label, .rstring:
             return .string(string ?? "")
-        case XLS_RECORD_NUMBER, XLS_RECORD_RK, XLS_RECORD_MULRK:
+        case .number, .rk, .mulrk:
             return .number(doubleValue)
-        case XLS_RECORD_BOOLERR:
+        case .boolerr:
             return .string(string ?? "")
         default:
             return .unknown

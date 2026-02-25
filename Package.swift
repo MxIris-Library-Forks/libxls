@@ -5,7 +5,7 @@ let package = Package(
     name: "libxls",
     products: [
         .library(name: "libxls", targets: ["libxls"]),
-        .library(name: "XLS", targets: ["XLS"]),
+        .library(name: "XLSReader", targets: ["XLSReader"]),
     ],
     targets: [
         .target(
@@ -36,7 +36,7 @@ let package = Package(
             ]
         ),
         .target(
-            name: "XLS",
+            name: "XLSReader",
             dependencies: ["libxls"]
         ),
         .testTarget(
@@ -44,8 +44,8 @@ let package = Package(
             dependencies: ["libxls"]
         ),
         .testTarget(
-            name: "XLSTests",
-            dependencies: ["XLS"],
+            name: "XLSReaderTests",
+            dependencies: ["XLSReader"],
             resources: [.copy("Resources")]
         ),
     ]

@@ -92,12 +92,12 @@ public struct Workbook: ~Copyable {
     public init(path: String, charset: String = "UTF-8") throws {
         var error: xls_error_t = .LIBXLS_OK
         guard let wb = xls_open_file(path, charset, &error) else {
-            throw XLSError(code: error)
+            throw XLSError(cCode: error)
         }
         let parseResult = xls_parseWorkBook(wb)
         if parseResult != .LIBXLS_OK {
             xls_close_WB(wb)
-            throw XLSError(code: parseResult)
+            throw XLSError(cCode: parseResult)
         }
         self.handle = wb
         self.buffer = nil
@@ -117,13 +117,13 @@ public struct Workbook: ~Copyable {
         var error: xls_error_t = .LIBXLS_OK
         guard let wb = xls_open_buffer(buf, count, charset, &error) else {
             buf.deallocate()
-            throw XLSError(code: error)
+            throw XLSError(cCode: error)
         }
         let parseResult = xls_parseWorkBook(wb)
         if parseResult != .LIBXLS_OK {
             xls_close_WB(wb)
             buf.deallocate()
-            throw XLSError(code: parseResult)
+            throw XLSError(cCode: parseResult)
         }
         self.handle = wb
         self.buffer = buf
@@ -148,12 +148,12 @@ public struct Workbook: ~Copyable {
     /// - Throws: `XLSError` if the sheet cannot be opened or parsed, or any error thrown by the closure.
     public func withWorksheet<R>(at index: Int, _ body: (borrowing Worksheet) throws -> R) throws -> R {
         guard let ws = xls_getWorkSheet(handle, Int32(index)) else {
-            throw XLSError(code: .LIBXLS_ERROR_PARSE)
+            throw XLSError(code: .parse)
         }
         let parseResult = xls_parseWorkSheet(ws)
         if parseResult != .LIBXLS_OK {
             xls_close_WS(ws)
-            throw XLSError(code: parseResult)
+            throw XLSError(cCode: parseResult)
         }
         let worksheet = Worksheet(handle: ws)
         return try body(worksheet)

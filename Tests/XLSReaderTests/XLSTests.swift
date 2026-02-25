@@ -1,10 +1,9 @@
 import Testing
 import Foundation
-import XLS
-import libxls
+import XLSReader
 
 @Test func versionString() {
-    let v = XLS.version
+    let v = XLSReader.version
     #expect(!v.isEmpty)
     #expect(v == "1.6.3")
 }
@@ -131,34 +130,37 @@ import libxls
         _ = try Workbook(path: "/nonexistent/path.xls")
     } throws: { error in
         guard let xlsError = error as? XLSError else { return false }
-        return xlsError.code == .LIBXLS_ERROR_OPEN
+        return xlsError.code == .open
     }
 }
 
-@Test func setDebugLevelWorks() {
-    let prev = XLS.setDebugLevel(0)
-    #expect(prev == 0 || true) // just verify it doesn't crash
+@Test func debugLevelProperty() {
+    XLSReader.debugLevel = 0
+    #expect(XLSReader.debugLevel == 0)
 }
 
-@Test func errorCodeEnumSwitch() {
-    // Verify xls_error_t is a proper Swift enum that supports exhaustive switch
-    let code: xls_error_t = .LIBXLS_OK
+@Test func formulaHandlerProperty() {
+    // Verify setting and clearing the formula handler doesn't crash
+    XLSReader.formulaHandler = { _, _ in }
+    #expect(XLSReader.formulaHandler != nil)
+    XLSReader.formulaHandler = nil
+    #expect(XLSReader.formulaHandler == nil)
+}
+
+@Test func errorCodeEnum() {
+    let code: XLSError.Code = .open
     switch code {
-    case .LIBXLS_OK:
+    case .open, .seek, .read, .parse,
+         .malloc, .unsupportedEncryption, .nullArgument:
         break
-    case .LIBXLS_ERROR_OPEN, .LIBXLS_ERROR_SEEK, .LIBXLS_ERROR_READ, .LIBXLS_ERROR_PARSE,
-         .LIBXLS_ERROR_MALLOC, .LIBXLS_ERROR_UNSUPPORTED_ENCRYPTION, .LIBXLS_ERROR_NULL_ARGUMENT:
-        Issue.record("Expected .LIBXLS_OK")
-    @unknown default:
-        Issue.record("Unexpected case")
     }
 }
 
 @Test func xlsErrorDescription() {
-    let error = XLSError(code: .LIBXLS_ERROR_OPEN)
+    let error = XLSError(code: .open)
     #expect(!error.description.isEmpty)
-    #expect(error == XLSError(code: .LIBXLS_ERROR_OPEN))
-    #expect(error != XLSError(code: .LIBXLS_ERROR_PARSE))
+    #expect(error == XLSError(code: .open))
+    #expect(error != XLSError(code: .parse))
 }
 
 // MARK: - Helpers
