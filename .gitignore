@@ -9,6 +9,7 @@
 aclocal.m4
 compile
 config.h*
+!Sources/libxls/src/config.h
 config.guess
 config.guess~
 config.log
