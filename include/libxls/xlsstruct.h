@@ -478,6 +478,14 @@ typedef	struct st_colinfo
 }
 st_colinfo;
 
+typedef struct st_palette
+{
+    DWORD       colors[56];     // Custom palette colors (indices 0x08-0x3F)
+    WORD        count;          // Number of custom colors
+    BYTE        hasCustom;      // Non-zero if a PALETTE record was found
+}
+st_palette;
+
 typedef struct xlsWorkBook
 {
     //FILE*		file;
@@ -498,6 +506,7 @@ typedef struct xlsWorkBook
     st_xf		xfs;			// XF table
     st_font		fonts;
     st_format	formats;		// FORMAT table
+    st_palette  palette;        // Custom color palette
 
 	char		*summary;		// ole file
 	char		*docSummary;	// ole file

@@ -136,6 +136,19 @@ public struct Workbook: ~Copyable {
 
     // MARK: - Methods
 
+    /// Resolve a palette color index to an RGB value using this workbook's custom palette (if present).
+    ///
+    /// Unlike the global `resolveColor(index:default:)`, this method checks the workbook's
+    /// custom palette first, falling back to the default palette for unregistered indices.
+    ///
+    /// - Parameters:
+    ///   - index: The color index from the XLS palette.
+    ///   - defaultColor: The default color index to return if the index is out of range.
+    /// - Returns: The resolved RGB color value as a `UInt32`.
+    public func resolveColor(index: UInt16, default defaultColor: UInt16) -> UInt32 {
+        return xls_getColorForWorkbook(handle, index, defaultColor)
+    }
+
     /// Open and parse a worksheet at the given index, providing access via a closure.
     ///
     /// The worksheet is only valid within the closure body. This ensures the

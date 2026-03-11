@@ -1043,13 +1043,19 @@ xls_error_t xls_parseWorkBook(xlsWorkBook* pWB)
 			break;
 
         case XLS_RECORD_PALETTE:
-			if(xls_debug > 10) {
+			{
 				unsigned char *p = buf + 2;
 				int idx, len;
 
 				len = buf[0] + (buf[1] << 8);
+				if (len > 56) len = 56;
+				pWB->palette.count = (WORD)len;
+				pWB->palette.hasCustom = 1;
 				for(idx=0; idx<len; ++idx) {
-					printf("   Index=0x%2.2x %2.2x%2.2x%2.2x\n", idx+8, p[0], p[1], p[2] );
+					pWB->palette.colors[idx] = ((DWORD)p[0] << 16) | ((DWORD)p[1] << 8) | (DWORD)p[2];
+					if(xls_debug > 10) {
+						printf("   Index=0x%2.2x %2.2x%2.2x%2.2x\n", idx+8, p[0], p[1], p[2] );
+					}
 					p += 4;
 				}
 			}

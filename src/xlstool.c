@@ -468,6 +468,24 @@ DWORD xls_getColor(const WORD color,WORD def)
         return colors[def];
 }
 
+DWORD xls_getColorForWorkbook(const xlsWorkBook* pWB, WORD color, WORD def)
+{
+    int cor=8;
+    int size = 64 - cor;
+    int max = size;
+    WORD idx=color;
+    if( idx >= cor)
+        idx -= cor;
+    if( idx < max )
+    {
+        if( pWB && pWB->palette.hasCustom && idx < pWB->palette.count )
+            return pWB->palette.colors[idx];
+        return colors[idx];
+    }
+    else
+        return colors[def];
+}
+
 
 void xls_showBookInfo(xlsWorkBook* pWB)
 {
